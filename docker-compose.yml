@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  build:
+    image: twitterbot:latest
+    build: ./
+    volumes:
+      - .:/usr/local/src/
+    stdin_open: true
+    tty: true
