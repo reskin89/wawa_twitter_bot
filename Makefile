@@ -1,20 +1,27 @@
-build-container:
-	docker build -t twitterbot .
+fetch-deps:
+	go get github.com/dghubble/oauth1 && \
+	go get github.com/dghubble/go-twitter/twitter
 
-tf-plan:
+verify-syntax: fetch-deps
+	go vet
+
+build: fetch-deps
+	go build -o wawatweetbot
+
+bootstrap-plan:
+	cd terraform/tf-bootstrap && \
+	terraform fmt && \
+	terraform plan -out bootstrap.plan
+
+bootstrap-apply:
+	cd terraform/tf-bootstrap && \
+	terraform apply bootstrap.plan
+
+binary-bucket-plan:
 	cd terraform && \
 	terraform fmt && \
-	terraform plan -out=twitterbot.tfplan
+	terraform plan -out binbucket.plan
 
-tf-apply:
-	cd terraform && \
-	terraform apply twitterbot.tfplan
-
-verify-syntax:
-	cd scripts && \
-	python3 -m py_compile twitterbot.py
-
-run:
-	cd scripts &&\
-	pip3 install -r requirements.txt && \
-	python3 twitterbot.py
+binary-bucket-apply:
+	cd terraform/ && \
+	terraform apply binbucket.plan

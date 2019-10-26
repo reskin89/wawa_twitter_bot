@@ -1,0 +1,44 @@
+resources:
+- name: master
+  type: git
+  source:
+    uri: https://github.com/reskin89/wawa_twitter_bot.git
+    username: ((github.username))
+    password: ((github.password))
+    branch: master
+
+- name: binary
+  type: s3
+  source:
+    bucket: eskin-pipeline-data
+    versioned_file: tweetbot/wawatweetbot.tar.gz
+    access_key_id: ((aws.access-key))
+    secret_access_key: ((aws.secret-key))
+
+- name: tfplan
+  type: s3
+  source:
+    bucket: eskin-pipeline-data
+    versioned_file: terraform/tfplan.tar.gz
+    access_key_id: ((aws.access-key))
+    secret_access_key: ((aws.secret-key))
+
+jobs:
+- name: Terraform-Plan-Bucket
+  plan:
+  - get: master
+  - task: TF-Plan-Bucket
+    file: master/ci/tasks/tf-plan-bucket.yml
+    on_success:
+      do:
+      - put: tfplan
+        params:
+          file: master/terraform/plan.tar.gz
+          content_type: application/zip
+- name: Terraform-Apply-Bucket
+  plan:
+  - get: master
+  - get: tfplan
+    passed:
+    - Terraform-Plan-Bucket
+  - task: tf-apply-bucket.yml
