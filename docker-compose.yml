@@ -2,8 +2,7 @@ version: '3'
 
 services:
   build:
-    image: twitterbot:latest
-    build: ./
+    image: golang:1.12.12-alpine3.9
     volumes:
       - .:/usr/local/src/
     stdin_open: true

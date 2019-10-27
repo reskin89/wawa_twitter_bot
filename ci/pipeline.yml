@@ -1,0 +1,37 @@
+resources:
+- name: master
+  type: git
+  source:
+    uri: https://github.com/reskin89/wawa_twitter_bot.git
+    username: ((github.username))
+    password: ((github.password))
+    branch: master
+
+- name: binary
+  type: s3
+  source:
+    bucket: eskin-pipeline-data
+    versioned_file: tweetbot/wawatweetbot.tar.gz
+    access_key_id: ((aws.access-key))
+    secret_access_key: ((aws.secret-key))
+
+jobs:
+- name: Make-and-Upload-Binary-And-Quotes
+  plan:
+  - get: master
+  - task: make-and-upload
+    file: master/ci/tasks/make-and-upload.yml
+    on_success:
+      do:
+      - put: binary
+        params:
+          file: master/wawatweetbot.tar.gz
+          content_type: application/zip
+- name: Tweet-Dat
+  plan:
+  - get: master
+  - get: binary
+    passed:
+    - Make-and-Upload-Binary-And-Quotes
+  - task: tweet-dat
+    file: master/ci/tasks/tweet-dat.yml
