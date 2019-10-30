@@ -20,6 +20,6 @@ run:
   - -ec
   - |
     cd master
-    apk add make cmake
+    apk add make cmake git wget
     make build
     tar czvf wawatwitterbot.tar.gz wawatweetbot quotes.txt
