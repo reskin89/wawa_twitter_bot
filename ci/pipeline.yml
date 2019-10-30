@@ -25,7 +25,7 @@ jobs:
       do:
       - put: binary
         params:
-          file: master/wawatweetbot.tar.gz
+          file: master/wawatwitterbot.tar.gz
           content_type: application/zip
 - name: Tweet-Dat
   plan:
