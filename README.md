@@ -15,3 +15,5 @@ ACCESS_TOKEN_SECRET
 CONSUMER_KEY
 CONSUMER_SECRET
 ```
+
+To contribute and add any quotes with memories of your favorite wawa pizza, please submit a pull request!
