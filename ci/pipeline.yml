@@ -15,6 +15,10 @@ resources:
     access_key_id: ((aws.access-key))
     secret_access_key: ((aws.secret-key))
 
+- name: timer
+  type: time
+  source: {interval: 6h}
+
 jobs:
 - name: Make-and-Upload-Binary-And-Quotes
   plan:
@@ -31,7 +35,16 @@ jobs:
   plan:
   - get: master
   - get: binary
+    params:
+      unpack: true
     passed:
     - Make-and-Upload-Binary-And-Quotes
+  - get: timer
+    trigger: true
   - task: tweet-dat
     file: master/ci/tasks/tweet-dat.yml
+    params:
+      CONSUMER_KEY: ((twitter.key))
+      CONSUMER_SECRET: ((twitter.secret-key))
+      ACCESS_TOKEN: ((twitter.token))
+      ACCESS_TOKEN_SECRET: ((twitter.token-secret))

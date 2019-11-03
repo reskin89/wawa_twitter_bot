@@ -1,0 +1,27 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: 1.12.12-alpine3.9
+
+inputs:
+- name: master
+- name: binary
+
+params:
+  CONSUMER_KEY:
+  CONSUMER_SECRET:
+  ACCESS_TOKEN:
+  ACCESS_TOKEN_SECRET:
+
+run:
+  path: sh
+  args:
+  - -ec
+  - |
+    cd binary/wawatwitterbot/
+    chmod +x wawatweetbot
+    ./wawatweetbot
