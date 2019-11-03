@@ -22,7 +22,7 @@ run:
   args:
   - -ec
   - |
-    ls -lR
-    cd binary/wawatwitterbot/
+    set -xv
+    cd binary/
     chmod +x wawatweetbot
     ./wawatweetbot
