@@ -8,6 +8,7 @@ import (
   "io/ioutil"
   "os"
   "math/rand"
+  "time"
 )
 
 type Credentials struct {
@@ -19,6 +20,7 @@ type Credentials struct {
 
 func main() {
   var filename string = "quotes.txt"
+  rand.Seed(time.Now().UTC().UnixNano())
 
   creds := Credentials {
     ConsumerKey : os.Getenv("CONSUMER_KEY"),
@@ -34,12 +36,14 @@ func main() {
 
   quote := getQuote(filename)
 
+  log.Println("Quote Chosen: \""+ quote + "\"")
+
   tweet, resp, err := client.Statuses.Update(quote, nil)
   if err != nil {
       log.Println(err)
   }
-  log.Printf("%+v\n", resp)
   log.Printf("%+v\n", tweet)
+  log.Printf("%+v\n", resp)
 
 }
 
